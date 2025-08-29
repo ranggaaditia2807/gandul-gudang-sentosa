@@ -1,274 +1,183 @@
-import { useState } from "react";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { 
-  Search, 
-  Plus, 
-  Filter, 
-  Download,
-  Edit,
-  Trash2,
-  Package,
-  AlertTriangle,
-  CheckCircle
-} from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Plus, Search, Package, AlertCircle, CheckCircle } from "lucide-react";
+import { useState } from "react";
+
+const sampleItems = [
+  {
+    id: "KB001",
+    name: "Kabel XLPE 150mm",
+    category: "Kabel",
+    stock: 45,
+    minStock: 20,
+    location: "Rak A-01",
+    status: "normal"
+  },
+  {
+    id: "IS002", 
+    name: "Isolator Keramik 20kV",
+    category: "Isolator",
+    stock: 8,
+    minStock: 15,
+    location: "Rak B-02",
+    status: "low"
+  },
+  {
+    id: "TR003",
+    name: "Trafo Distribusi 400kVA",
+    category: "Trafo",
+    stock: 3,
+    minStock: 2,
+    location: "Area C",
+    status: "normal"
+  },
+  {
+    id: "PN004",
+    name: "Panel Distribusi 20kV",
+    category: "Panel",
+    stock: 12,
+    minStock: 5,
+    location: "Area D",
+    status: "good"
+  }
+];
 
 export default function Warehouse() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const inventoryItems = [
-    {
-      id: "ITM-001",
-      name: "Kabel NYAF 2.5mm",
-      category: "Kabel",
-      stock: 500,
-      minStock: 100,
-      unit: "meter",
-      location: "A1-01",
-      lastUpdated: "2024-01-15",
-      status: "normal"
-    },
-    {
-      id: "ITM-002", 
-      name: "MCB 20A Schneider",
-      category: "Circuit Breaker",
-      stock: 75,
-      minStock: 50,
-      unit: "pcs",
-      location: "B2-05",
-      lastUpdated: "2024-01-14",
-      status: "normal"
-    },
-    {
-      id: "ITM-003",
-      name: "Trafo 50KVA",
-      category: "Transformator",
-      stock: 8,
-      minStock: 5,
-      unit: "unit",
-      location: "C1-03",
-      lastUpdated: "2024-01-13",
-      status: "normal"
-    },
-    {
-      id: "ITM-004",
-      name: "Kabel NYM 3x2.5",
-      category: "Kabel",
-      stock: 15,
-      minStock: 50,
-      unit: "meter",
-      location: "A1-02",
-      lastUpdated: "2024-01-12",
-      status: "low"
-    },
-    {
-      id: "ITM-005",
-      name: "Panel Box 12 Way",
-      category: "Panel",
-      stock: 0,
-      minStock: 10,
-      unit: "pcs",
-      location: "B1-08",
-      lastUpdated: "2024-01-11",
-      status: "empty"
-    },
-    {
-      id: "ITM-006",
-      name: "Kontaktor 25A",
-      category: "Kontaktor",
-      stock: 32,
-      minStock: 20,
-      unit: "pcs",
-      location: "B3-02",
-      lastUpdated: "2024-01-10",
-      status: "normal"
-    }
-  ];
+  const filteredItems = sampleItems.filter(item => {
+    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         item.id.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === "all" || item.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   const getStatusBadge = (status: string, stock: number, minStock: number) => {
-    if (stock === 0) {
-      return <Badge variant="destructive" className="text-xs">Kosong</Badge>;
-    } else if (stock <= minStock) {
-      return <Badge variant="secondary" className="text-xs bg-warning/20 text-warning">Stok Rendah</Badge>;
-    } else {
-      return <Badge variant="default" className="text-xs bg-success/20 text-success">Normal</Badge>;
+    if (stock <= minStock) {
+      return <Badge variant="destructive" className="flex items-center gap-1">
+        <AlertCircle className="h-3 w-3" />
+        Stok Menipis
+      </Badge>;
     }
-  };
-
-  const getStatusIcon = (status: string) => {
-    if (status === "empty") {
-      return <AlertTriangle className="w-4 h-4 text-destructive" />;
-    } else if (status === "low") {
-      return <AlertTriangle className="w-4 h-4 text-warning" />;
-    } else {
-      return <CheckCircle className="w-4 h-4 text-success" />;
+    if (status === "good") {
+      return <Badge className="bg-success text-success-foreground flex items-center gap-1">
+        <CheckCircle className="h-3 w-3" />
+        Stok Baik
+      </Badge>;
     }
+    return <Badge variant="secondary">Normal</Badge>;
   };
-
-  const filteredItems = inventoryItems.filter(item =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.id.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Manajemen Gudang</h1>
-          <p className="text-muted-foreground">Kelola inventaris dan stok barang</p>
+          <h1 className="text-3xl font-bold">Manajemen Gudang</h1>
+          <p className="text-muted-foreground">
+            Kelola inventaris barang PLN UPT Gandul
+          </p>
         </div>
-        <div className="flex gap-3">
-          <Button variant="outline">
-            <Download className="w-4 h-4 mr-2" />
-            Export
-          </Button>
-          <Button className="bg-gradient-primary hover:opacity-90">
-            <Plus className="w-4 h-4 mr-2" />
-            Tambah Item
-          </Button>
-        </div>
-      </div>
-
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="shadow-soft">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Item</CardTitle>
-            <Package className="h-4 w-4 text-primary" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{inventoryItems.length}</div>
-            <p className="text-xs text-muted-foreground">Jenis item berbeda</p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-soft">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Stok Normal</CardTitle>
-            <CheckCircle className="h-4 w-4 text-success" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-success">
-              {inventoryItems.filter(item => item.status === "normal").length}
-            </div>
-            <p className="text-xs text-muted-foreground">Item dengan stok cukup</p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-soft">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Stok Rendah</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-warning" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-warning">
-              {inventoryItems.filter(item => item.status === "low").length}
-            </div>
-            <p className="text-xs text-muted-foreground">Perlu restock segera</p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-soft">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Stok Kosong</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-destructive" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-destructive">
-              {inventoryItems.filter(item => item.status === "empty").length}
-            </div>
-            <p className="text-xs text-muted-foreground">Item habis</p>
-          </CardContent>
-        </Card>
+        <Button>
+          <Plus className="mr-2 h-4 w-4" />
+          Tambah Barang
+        </Button>
       </div>
 
       {/* Search and Filter */}
-      <Card className="shadow-soft">
-        <CardHeader>
-          <CardTitle>Daftar Inventaris</CardTitle>
-          <CardDescription>Kelola dan monitor semua item di gudang</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
+      <Card className="border-0 shadow-soft">
+        <CardContent className="p-6">
+          <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Cari berdasarkan nama, kategori, atau ID..."
+                placeholder="Cari barang berdasarkan nama atau kode..."
+                className="pl-10"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
               />
             </div>
-            <Button variant="outline">
-              <Filter className="w-4 h-4 mr-2" />
-              Filter
-            </Button>
-          </div>
-
-          {/* Inventory Table */}
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Item</TableHead>
-                  <TableHead>Kategori</TableHead>
-                  <TableHead>Stok</TableHead>
-                  <TableHead>Lokasi</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Update Terakhir</TableHead>
-                  <TableHead className="text-right">Aksi</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredItems.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        {getStatusIcon(item.status)}
-                        <div>
-                          <p className="font-medium">{item.name}</p>
-                          <p className="text-sm text-muted-foreground">{item.id}</p>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{item.category}</TableCell>
-                    <TableCell>
-                      <div>
-                        <p className="font-medium">{item.stock} {item.unit}</p>
-                        <p className="text-xs text-muted-foreground">Min: {item.minStock}</p>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="text-xs">{item.location}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      {getStatusBadge(item.status, item.stock, item.minStock)}
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {item.lastUpdated}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Button variant="ghost" size="sm">
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                        <Button variant="ghost" size="sm">
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-auto">
+              <TabsList>
+                <TabsTrigger value="all">Semua</TabsTrigger>
+                <TabsTrigger value="Kabel">Kabel</TabsTrigger>
+                <TabsTrigger value="Isolator">Isolator</TabsTrigger>
+                <TabsTrigger value="Trafo">Trafo</TabsTrigger>
+                <TabsTrigger value="Panel">Panel</TabsTrigger>
+              </TabsList>
+            </Tabs>
           </div>
         </CardContent>
       </Card>
+
+      {/* Inventory Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {filteredItems.map((item) => (
+          <Card key={item.id} className="border-0 shadow-soft hover:shadow-medium transition-shadow">
+            <CardHeader className="pb-3">
+              <div className="flex justify-between items-start">
+                <div>
+                  <CardTitle className="text-lg">{item.name}</CardTitle>
+                  <CardDescription className="text-sm font-mono">
+                    {item.id}
+                  </CardDescription>
+                </div>
+                <Package className="h-5 w-5 text-muted-foreground" />
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">Kategori:</span>
+                <Badge variant="outline">{item.category}</Badge>
+              </div>
+              
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">Stok:</span>
+                <span className="font-semibold">{item.stock} unit</span>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">Min. Stok:</span>
+                <span className="text-sm">{item.minStock} unit</span>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">Lokasi:</span>
+                <span className="text-sm font-mono">{item.location}</span>
+              </div>
+
+              <div className="pt-2 border-t">
+                {getStatusBadge(item.status, item.stock, item.minStock)}
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <Button variant="outline" size="sm" className="flex-1">
+                  Edit
+                </Button>
+                <Button variant="outline" size="sm" className="flex-1">
+                  Detail
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {filteredItems.length === 0 && (
+        <Card className="border-0 shadow-soft">
+          <CardContent className="text-center py-12">
+            <Package className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Tidak Ada Barang Ditemukan</h3>
+            <p className="text-muted-foreground">
+              Coba ubah kata kunci pencarian atau filter kategori
+            </p>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

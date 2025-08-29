@@ -1,157 +1,158 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Building2, Package, ArrowLeftRight, BarChart3, Users, Shield } from "lucide-react";
-import warehouseHero from "@/assets/warehouse-hero.jpg";
+import { Package, Users, TrendingUp, AlertCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
     <div className="space-y-8">
       {/* Hero Section */}
-      <div 
-        className="relative h-96 rounded-xl overflow-hidden bg-gradient-hero flex items-center justify-center text-center"
-        style={{
-          backgroundImage: `linear-gradient(rgba(37, 99, 235, 0.8), rgba(220, 38, 127, 0.8)), url(${warehouseHero})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}
-      >
-        <div className="text-white space-y-4 max-w-2xl px-6">
-          <h1 className="text-4xl md:text-5xl font-bold">
-            Sistem Manajemen Gudang
+      <div className="bg-gradient-hero rounded-xl p-8 text-white">
+        <div className="max-w-4xl">
+          <h1 className="text-4xl font-bold mb-4">
+            Selamat Datang di Sistem Manajemen Gudang
           </h1>
-          <p className="text-xl text-white/90">
-            PLN UPT Gandul - Mengelola inventaris dan transaksi dengan efisien
+          <p className="text-xl mb-6 text-white/90">
+            PLN UPT Gandul - Kelola inventaris dengan mudah dan efisien
           </p>
-          <div className="flex gap-4 justify-center mt-6">
-            <Button size="lg" className="bg-white text-primary hover:bg-white/90">
-              Mulai Sekarang
+          <div className="flex gap-4">
+            <Button asChild variant="secondary" size="lg">
+              <Link to="/warehouse">Kelola Gudang</Link>
             </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-              Pelajari Lebih Lanjut
+            <Button asChild variant="outline" size="lg" className="text-white border-white/20 hover:bg-white/10">
+              <Link to="/dashboard">Lihat Dashboard</Link>
             </Button>
           </div>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="shadow-soft">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="border-0 shadow-soft">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Item</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total Barang
+            </CardTitle>
             <Package className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">2,543</div>
-            <p className="text-xs text-muted-foreground">+12% dari bulan lalu</p>
+            <div className="text-2xl font-bold">1,234</div>
+            <p className="text-xs text-success">
+              +12% dari bulan lalu
+            </p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-soft">
+        <Card className="border-0 shadow-soft">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Transaksi Hari Ini</CardTitle>
-            <ArrowLeftRight className="h-4 w-4 text-success" />
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Stok Menipis
+            </CardTitle>
+            <AlertCircle className="h-4 w-4 text-warning" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">23</div>
+            <p className="text-xs text-warning">
+              Perlu restok segera
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-soft">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Transaksi Hari Ini
+            </CardTitle>
+            <TrendingUp className="h-4 w-4 text-success" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">89</div>
-            <p className="text-xs text-muted-foreground">+23% dari kemarin</p>
+            <p className="text-xs text-success">
+              +5% dari kemarin
+            </p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-soft">
+        <Card className="border-0 shadow-soft">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Nilai Inventaris</CardTitle>
-            <BarChart3 className="h-4 w-4 text-accent" />
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Pengguna Aktif
+            </CardTitle>
+            <Users className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">Rp 2.4M</div>
-            <p className="text-xs text-muted-foreground">+8% dari bulan lalu</p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-soft">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">User Aktif</CardTitle>
-            <Users className="h-4 w-4 text-warning" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">24</div>
-            <p className="text-xs text-muted-foreground">3 admin, 21 user</p>
+            <div className="text-2xl font-bold">12</div>
+            <p className="text-xs text-muted-foreground">
+              Saat ini online
+            </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Features Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card className="shadow-soft hover:shadow-medium transition-shadow">
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="border-0 shadow-soft">
           <CardHeader>
-            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-              <Package className="w-6 h-6 text-primary" />
-            </div>
-            <CardTitle>Manajemen Inventaris</CardTitle>
+            <CardTitle>Aksi Cepat</CardTitle>
             <CardDescription>
-              Kelola stok barang dengan sistem yang terintegrasi dan real-time
+              Akses fitur utama dengan mudah
             </CardDescription>
           </CardHeader>
+          <CardContent className="space-y-4">
+            <Button asChild className="w-full justify-start" variant="outline">
+              <Link to="/transactions">
+                <Package className="mr-2 h-4 w-4" />
+                Catat Transaksi Baru
+              </Link>
+            </Button>
+            <Button asChild className="w-full justify-start" variant="outline">
+              <Link to="/warehouse">
+                <AlertCircle className="mr-2 h-4 w-4" />
+                Cek Stok Barang
+              </Link>
+            </Button>
+            <Button asChild className="w-full justify-start" variant="outline">
+              <Link to="/reports">
+                <TrendingUp className="mr-2 h-4 w-4" />
+                Generate Laporan
+              </Link>
+            </Button>
+          </CardContent>
         </Card>
 
-        <Card className="shadow-soft hover:shadow-medium transition-shadow">
+        <Card className="border-0 shadow-soft">
           <CardHeader>
-            <div className="w-12 h-12 bg-success/10 rounded-lg flex items-center justify-center mb-4">
-              <ArrowLeftRight className="w-6 h-6 text-success" />
-            </div>
-            <CardTitle>Tracking Transaksi</CardTitle>
+            <CardTitle>Aktivitas Terbaru</CardTitle>
             <CardDescription>
-              Monitor semua transaksi masuk dan keluar dengan detail lengkap
+              Pembaruan sistem terkini
             </CardDescription>
           </CardHeader>
-        </Card>
-
-        <Card className="shadow-soft hover:shadow-medium transition-shadow">
-          <CardHeader>
-            <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4">
-              <BarChart3 className="w-6 h-6 text-accent" />
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-success rounded-full"></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Barang masuk: Kabel XLPE 150mm</p>
+                  <p className="text-xs text-muted-foreground">2 jam yang lalu</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-warning rounded-full"></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Stok menipis: Isolator Keramik</p>
+                  <p className="text-xs text-muted-foreground">4 jam yang lalu</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="w-2 h-2 bg-primary rounded-full"></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Laporan bulanan telah dibuat</p>
+                  <p className="text-xs text-muted-foreground">1 hari yang lalu</p>
+                </div>
+              </div>
             </div>
-            <CardTitle>Laporan Analitik</CardTitle>
-            <CardDescription>
-              Dapatkan insight mendalam dengan laporan dan analisis data
-            </CardDescription>
-          </CardHeader>
-        </Card>
-
-        <Card className="shadow-soft hover:shadow-medium transition-shadow">
-          <CardHeader>
-            <div className="w-12 h-12 bg-warning/10 rounded-lg flex items-center justify-center mb-4">
-              <Shield className="w-6 h-6 text-warning" />
-            </div>
-            <CardTitle>Kontrol Akses</CardTitle>
-            <CardDescription>
-              Sistem keamanan berlapis dengan role-based access control
-            </CardDescription>
-          </CardHeader>
-        </Card>
-
-        <Card className="shadow-soft hover:shadow-medium transition-shadow">
-          <CardHeader>
-            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-              <Building2 className="w-6 h-6 text-primary" />
-            </div>
-            <CardTitle>Multi Lokasi</CardTitle>
-            <CardDescription>
-              Mendukung pengelolaan gudang di berbagai lokasi PLN
-            </CardDescription>
-          </CardHeader>
-        </Card>
-
-        <Card className="shadow-soft hover:shadow-medium transition-shadow">
-          <CardHeader>
-            <div className="w-12 h-12 bg-success/10 rounded-lg flex items-center justify-center mb-4">
-              <Users className="w-6 h-6 text-success" />
-            </div>
-            <CardTitle>User Management</CardTitle>
-            <CardDescription>
-              Kelola user dan hak akses dengan sistem yang fleksibel
-            </CardDescription>
-          </CardHeader>
+          </CardContent>
         </Card>
       </div>
     </div>

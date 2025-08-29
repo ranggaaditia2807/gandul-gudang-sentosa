@@ -1,198 +1,180 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  Package, 
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  ArrowRight
-} from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { Download, RefreshCw, TrendingUp, Package, AlertTriangle } from "lucide-react";
+
+const monthlyData = [
+  { name: 'Jan', masuk: 65, keluar: 45 },
+  { name: 'Feb', masuk: 59, keluar: 52 },
+  { name: 'Mar', masuk: 80, keluar: 48 },
+  { name: 'Apr', masuk: 81, keluar: 64 },
+  { name: 'May', masuk: 56, keluar: 42 },
+  { name: 'Jun', masuk: 75, keluar: 58 },
+];
+
+const categoryData = [
+  { name: 'Kabel', value: 400, color: 'hsl(217 91% 45%)' },
+  { name: 'Isolator', value: 300, color: 'hsl(0 84% 60%)' },
+  { name: 'Trafo', value: 200, color: 'hsl(142 71% 45%)' },
+  { name: 'Panel', value: 100, color: 'hsl(48 96% 53%)' },
+];
 
 export default function Dashboard() {
-  const recentTransactions = [
-    { id: "TRX-001", item: "Kabel NYAF 2.5mm", type: "Keluar", qty: 100, time: "2 jam lalu", status: "completed" },
-    { id: "TRX-002", item: "MCB 20A", type: "Masuk", qty: 50, time: "4 jam lalu", status: "pending" },
-    { id: "TRX-003", item: "Trafo 50KVA", type: "Keluar", qty: 2, time: "6 jam lalu", status: "completed" },
-    { id: "TRX-004", item: "Panel Box", type: "Masuk", qty: 25, time: "8 jam lalu", status: "completed" },
-  ];
-
-  const lowStockItems = [
-    { name: "Kabel NYM 3x2.5", current: 15, minimum: 50, percentage: 30 },
-    { name: "MCB 16A", current: 8, minimum: 25, percentage: 32 },
-    { name: "Kontaktor 25A", current: 3, minimum: 10, percentage: 30 },
-    { name: "Relay Timer", current: 7, minimum: 20, percentage: 35 },
-  ];
-
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-        <p className="text-muted-foreground">Ringkasan aktivitas gudang PLN UPT Gandul</p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold">Dashboard</h1>
+          <p className="text-muted-foreground">
+            Ringkasan data gudang PLN UPT Gandul
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm">
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Refresh
+          </Button>
+          <Button size="sm">
+            <Download className="mr-2 h-4 w-4" />
+            Export
+          </Button>
+        </div>
       </div>
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="shadow-soft">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="border-0 shadow-soft">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Inventaris</CardTitle>
-            <Package className="h-4 w-4 text-primary" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">2,543</div>
-            <div className="flex items-center text-xs text-success">
-              <TrendingUp className="w-3 h-3 mr-1" />
-              +12% bulan ini
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-soft">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Item Keluar Hari Ini</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Nilai Inventaris</CardTitle>
             <TrendingUp className="h-4 w-4 text-success" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">156</div>
-            <div className="flex items-center text-xs text-success">
-              <TrendingUp className="w-3 h-3 mr-1" />
-              +23% dari kemarin
-            </div>
+            <div className="text-2xl font-bold">Rp 2.4M</div>
+            <p className="text-xs text-success">+8.2% dari bulan lalu</p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-soft">
+        <Card className="border-0 shadow-soft">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Item Masuk Hari Ini</CardTitle>
-            <TrendingDown className="h-4 w-4 text-accent" />
+            <CardTitle className="text-sm font-medium">Kategori Barang</CardTitle>
+            <Package className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">89</div>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <TrendingDown className="w-3 h-3 mr-1" />
-              -5% dari kemarin
-            </div>
+            <div className="text-2xl font-bold">24</div>
+            <p className="text-xs text-muted-foreground">Kategori aktif</p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-soft">
+        <Card className="border-0 shadow-soft">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Stok Menipis</CardTitle>
+            <CardTitle className="text-sm font-medium">Item Kritis</CardTitle>
             <AlertTriangle className="h-4 w-4 text-warning" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <div className="flex items-center text-xs text-warning">
-              <AlertTriangle className="w-3 h-3 mr-1" />
-              Perlu perhatian
-            </div>
+            <div className="text-2xl font-bold">7</div>
+            <p className="text-xs text-warning">Perlu perhatian</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Recent Transactions */}
-        <Card className="shadow-soft">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Transaksi Terbaru</CardTitle>
-                <CardDescription>Aktivitas gudang hari ini</CardDescription>
-              </div>
-              <Button variant="outline" size="sm">
-                Lihat Semua <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentTransactions.map((transaction) => (
-                <div key={transaction.id} className="flex items-center justify-between p-3 bg-secondary/20 rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-3 h-3 rounded-full ${
-                      transaction.status === 'completed' ? 'bg-success' : 'bg-warning'
-                    }`} />
-                    <div>
-                      <p className="font-medium text-sm">{transaction.item}</p>
-                      <p className="text-xs text-muted-foreground">{transaction.id} • {transaction.time}</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <Badge variant={transaction.type === "Masuk" ? "default" : "destructive"} className="text-xs">
-                      {transaction.type}
-                    </Badge>
-                    <p className="text-sm font-medium mt-1">{transaction.qty} unit</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+      {/* Charts */}
+      <Tabs defaultValue="overview" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="overview">Ringkasan</TabsTrigger>
+          <TabsTrigger value="inventory">Inventaris</TabsTrigger>
+          <TabsTrigger value="transactions">Transaksi</TabsTrigger>
+        </TabsList>
 
-        {/* Low Stock Alert */}
-        <Card className="shadow-soft">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                  <AlertTriangle className="w-5 h-5 text-warning" />
-                  Stok Menipis
-                </CardTitle>
-                <CardDescription>Item yang perlu segera direstock</CardDescription>
-              </div>
-              <Button variant="outline" size="sm">
-                Restock <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {lowStockItems.map((item, index) => (
-                <div key={index} className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="font-medium">{item.name}</span>
-                    <span className="text-muted-foreground">{item.current}/{item.minimum}</span>
-                  </div>
-                  <Progress value={item.percentage} className="h-2" />
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+        <TabsContent value="overview" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="border-0 shadow-soft">
+              <CardHeader>
+                <CardTitle>Tren Barang Masuk & Keluar</CardTitle>
+                <CardDescription>6 bulan terakhir</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={monthlyData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="masuk" fill="hsl(217 91% 45%)" name="Barang Masuk" />
+                    <Bar dataKey="keluar" fill="hsl(0 84% 60%)" name="Barang Keluar" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
 
-      {/* Quick Actions */}
-      <Card className="shadow-soft">
-        <CardHeader>
-          <CardTitle>Aksi Cepat</CardTitle>
-          <CardDescription>Shortcuts untuk operasi yang sering dilakukan</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Button className="h-20 flex-col gap-2 bg-gradient-primary hover:opacity-90" size="lg">
-              <Package className="w-6 h-6" />
-              Tambah Item
-            </Button>
-            <Button variant="outline" className="h-20 flex-col gap-2" size="lg">
-              <TrendingUp className="w-6 h-6" />
-              Item Masuk
-            </Button>
-            <Button variant="outline" className="h-20 flex-col gap-2" size="lg">
-              <TrendingDown className="w-6 h-6" />
-              Item Keluar
-            </Button>
-            <Button variant="outline" className="h-20 flex-col gap-2" size="lg">
-              <CheckCircle className="w-6 h-6" />
-              Cek Stok
-            </Button>
+            <Card className="border-0 shadow-soft">
+              <CardHeader>
+                <CardTitle>Distribusi Kategori Barang</CardTitle>
+                <CardDescription>Berdasarkan jumlah item</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={categoryData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {categoryData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
           </div>
-        </CardContent>
-      </Card>
+        </TabsContent>
+
+        <TabsContent value="inventory">
+          <Card className="border-0 shadow-soft">
+            <CardHeader>
+              <CardTitle>Status Inventaris</CardTitle>
+              <CardDescription>Ringkasan kondisi stok barang</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-8">
+                <Package className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Data Inventaris</h3>
+                <p className="text-muted-foreground">
+                  Fitur detail inventaris akan segera tersedia
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="transactions">
+          <Card className="border-0 shadow-soft">
+            <CardHeader>
+              <CardTitle>Riwayat Transaksi</CardTitle>
+              <CardDescription>Aktivitas terbaru gudang</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-8">
+                <TrendingUp className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Data Transaksi</h3>
+                <p className="text-muted-foreground">
+                  Fitur detail transaksi akan segera tersedia
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
